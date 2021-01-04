@@ -1,0 +1,13 @@
+name: ${project.name}
+version: ${project.version}
+main: de.derfrzocker.chunkremover.ChunkRemover
+api-version: 1.16
+load: STARTUP
+authors: [ DerFrZocker ]
+description: ${project.description}
+website: https://github.com/DerFrZocker
+commands:
+  chunkremover:
+    usage: "/chunkremover"
+    description: "Reloads the plugin"
+    permission: "chunk-remover.reload"

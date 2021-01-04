@@ -1,0 +1,40 @@
+###########################################################################################
+#  -------------------------------------------------------------------------------------  #
+#  |      ____ _                 _         ____                                        |  #
+#  |     / ___| |__  _   _ _ __ | | __    |  _ \ ___ _ __ ___   _____   _____ _ __     |  #
+#  |    | |   | '_ \| | | | '_ \| |/ /____| |_) / _ \ '_ ` _ \ / _ \ \ / / _ \ '__|    |  #
+#  |    | |___| | | | |_| | | | |   <_____|  _ <  __/ | | | | | (_) \ V /  __/ |       |  #
+#  |     \____|_| |_|\__,_|_| |_|_|\_\    |_| \_\___|_| |_| |_|\___/ \_/ \___|_|       |  #
+#  |                                                                                   |  #
+#  |                                                                                   |  #
+#  |             SOURCE CODE: https://github.com/DerFrZocker/Chunk-Remover             |  #
+#  |          BUG REPORTS: https://github.com/DerFrZocker/Chunk-Remover/issues         |  #
+#  |                      Discord: http://discord.derfrzocker.de                       |  #
+#  |                    Donation: https://www.paypal.me/DerFrZocker                    |  #
+#  |                Patreon: https://www.patreon.com/woollydevelopment                 |  #
+#  |                                                                                   |  #
+#  |                                                                                   |  #
+#  |                                       NOTE:                                       |  #
+#  |                               PLEASE KEEP IN MIND,                                |  #
+#  |                THAT THE PLUGIN ONLY AFFECTS NEWLY GENERATED CHUNKS                |  #
+#  |               AND THAT SPAWN CHUNKS ARE NOT AFFECTED BY THIS PLUGIN               |  #
+#  |                                                                                   |  #
+#  -------------------------------------------------------------------------------------  #
+###########################################################################################.
+
+# You can add new worlds by simple following the schema below
+world-datas:
+  dummy-world:
+    chunk-validator:
+      name: "random"
+      data:
+        name-seeded: true # true: the resulting pattern is dependent on the world seed and name
+        # false: the resulting pattern is dependent only on the world seed
+        chance: 70.0 # The chance that a chunk is an empty chunk from 0 (no chunk gets removed) to 100 (all chunks are getting removed)
+        # In this case 70% of the world is removed
+  dummy-world-2:
+    chunk-validator:
+      name: "random"
+      data:
+        name-seeded: false
+        chance: 10.5
