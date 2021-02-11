@@ -32,7 +32,7 @@ public interface WorldData {
      * When this method returns true, than the portal room should get
      * generated. Even if the chunk the portal room is in is a empty / removed chunk.
      * <p>
-     * This only affects world, which can generated
+     * This only affects worlds, which can generated the portal room
      *
      * @return true if the portal room should get generated, otherwise false
      */

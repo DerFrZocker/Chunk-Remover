@@ -27,12 +27,12 @@ package de.derfrzocker.chunkremover.impl.v1_16_R3;
 import com.mojang.serialization.Codec;
 import de.derfrzocker.chunkremover.api.ChunkPosition;
 import de.derfrzocker.chunkremover.api.ChunkRemoverService;
+import de.derfrzocker.chunkremover.api.WorldData;
 import net.minecraft.server.v1_16_R3.*;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -41,18 +41,12 @@ import java.util.function.Supplier;
 public class ChunkOverrider extends ChunkGenerator {
 
     private final static Method a;
-    private final static Field b;
-    private final static Field d;
 
     static {
         try {
             a = ChunkGenerator.class.getDeclaredMethod("a");
             a.setAccessible(true);
-            b = ChunkGenerator.class.getDeclaredField("b");
-            b.setAccessible(true);
-            d = WorldGenCarverWrapper.class.getDeclaredField("d");
-            d.setAccessible(true);
-        } catch (NoSuchMethodException | NoSuchFieldException e) {
+        } catch (NoSuchMethodException e) {
             throw new RuntimeException("Unexpected Error while get Method");
         }
     }
@@ -98,9 +92,45 @@ public class ChunkOverrider extends ChunkGenerator {
 
     @Override
     public void addDecorations(RegionLimitedWorldAccess regionLimitedWorldAccess, StructureManager structuremanager) {
-        if (serviceSupplier.get().shouldGenerate(world, new ChunkPosition(regionLimitedWorldAccess.a(), regionLimitedWorldAccess.b()))) {
+
+        ChunkRemoverService service = serviceSupplier.get();
+        ChunkPosition chunkPosition = new ChunkPosition(regionLimitedWorldAccess.a(), regionLimitedWorldAccess.b());
+
+        if (service.shouldGenerate(world, chunkPosition)) {
             parent.addDecorations(regionLimitedWorldAccess, structuremanager);
+            return;
         }
+
+        // chunk should not get generated
+        WorldData worldData = service.getWorldData(world.getName());
+
+        if (worldData == null) {
+            // no world data -> nothing we can do
+            return;
+        }
+
+        final int chunkX = chunkPosition.getX();
+        final int chunkZ = chunkPosition.getZ();
+        final int x = chunkX << 4;
+        final int z = chunkZ << 4;
+
+        if (worldData.shouldGeneratePortalRoom()) {
+            // generation Stronghold room
+
+            SeededRandom random = new SeededRandom();
+            structuremanager.a(SectionPosition.a(new ChunkCoordIntPair(regionLimitedWorldAccess.a(), regionLimitedWorldAccess.b()), 0), StructureGenerator.STRONGHOLD).forEach((structureStart) -> {
+                int i = 0;
+                for (StructurePiece structurePiece : structureStart.d()) {
+                    i++;
+                    if (structurePiece instanceof WorldGenStrongholdPieces.WorldGenStrongholdPortalRoom) {
+                        // TODO maybe look for the real random
+                        random.a(world.getSeed() + i, chunkX, chunkZ);
+                        structurePiece.a(regionLimitedWorldAccess, structuremanager, this, random, new StructureBoundingBox(x, z, x + 15, z + 15), new ChunkCoordIntPair(chunkX, chunkZ), null);
+                    }
+                }
+            });
+        }
+
     }
 
     @Override
@@ -124,7 +154,8 @@ public class ChunkOverrider extends ChunkGenerator {
 
     @Nullable
     @Override
-    public BlockPosition findNearestMapFeature(WorldServer worldserver, StructureGenerator<?> structuregenerator, BlockPosition blockposition, int i, boolean flag) {
+    public BlockPosition findNearestMapFeature(WorldServer worldserver, StructureGenerator<?>
+            structuregenerator, BlockPosition blockposition, int i, boolean flag) {
         return parent.findNearestMapFeature(worldserver, structuregenerator, blockposition, i, flag);
     }
 
@@ -159,7 +190,8 @@ public class ChunkOverrider extends ChunkGenerator {
     }
 
     @Override
-    public List<BiomeSettingsMobs.c> getMobsFor(BiomeBase biomebase, StructureManager structuremanager, EnumCreatureType enumcreaturetype, BlockPosition blockposition) {
+    public List<BiomeSettingsMobs.c> getMobsFor(BiomeBase biomebase, StructureManager
+            structuremanager, EnumCreatureType enumcreaturetype, BlockPosition blockposition) {
         return parent.getMobsFor(biomebase, structuremanager, enumcreaturetype, blockposition);
     }
 
@@ -184,12 +216,14 @@ public class ChunkOverrider extends ChunkGenerator {
     }
 
     @Override
-    public void createStructures(IRegistryCustom iregistrycustom, StructureManager structuremanager, IChunkAccess ichunkaccess, DefinedStructureManager definedstructuremanager, long i) {
+    public void createStructures(IRegistryCustom iregistrycustom, StructureManager structuremanager, IChunkAccess
+            ichunkaccess, DefinedStructureManager definedstructuremanager, long i) {
         parent.createStructures(iregistrycustom, structuremanager, ichunkaccess, definedstructuremanager, i);
     }
 
     @Override
-    public void storeStructures(GeneratorAccessSeed generatoraccessseed, StructureManager structuremanager, IChunkAccess ichunkaccess) {
+    public void storeStructures(GeneratorAccessSeed generatoraccessseed, StructureManager
+            structuremanager, IChunkAccess ichunkaccess) {
         parent.storeStructures(generatoraccessseed, structuremanager, ichunkaccess);
     }
 
