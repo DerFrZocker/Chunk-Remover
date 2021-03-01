@@ -39,6 +39,30 @@ public interface WorldData {
     boolean shouldGeneratePortalRoom();
 
     /**
+     * This only works in a dimension which can spawn the ender dragon fight.
+     *
+     * With this option set to true, the plugin should attempt to fix the
+     * exit portal in the end. The exit portal spawns at P(0|0|0) if the chunk
+     * with the position P(0|0) is empty / removed. This leads to an exit portal
+     * which is not functional. In order to fix this, the height of the surrounding
+     * terrain gets used. If this fails, for example because there is no surrounding
+     * terrain the value from {@link #getFallbackExitPortalHeight()} is used
+     *
+     * @return true if the exit portal should be fixed or false if not
+     */
+    boolean shouldFixExitPortal();
+
+    /**
+     * This value is used if {@link #shouldFixExitPortal()} returns true
+     * and no suitable position is found.
+     *
+     * For further details see {@link #shouldFixExitPortal()}
+     *
+     * @return y-fallback value for the exit portal
+     */
+    int getFallbackExitPortalHeight();
+
+    /**
      * @return the name of the chunk validator which should get used
      */
     @NotNull

@@ -25,14 +25,26 @@
 # You can add new worlds by simple following the schema below
 world-datas:
   dummy-world:
+    generate-portal-room: false # when this is set to true the portal room which leads to the end
+                                # will get generated even, if the portal room is in an empty chunk
+                                # in which case the portal room will fly mid air
+                                #
+                                # This option only works for worlds, which have normally a portal room (normally only the overworld)
     chunk-validator:
       name: "random"
       data:
         name-seeded: true # true: the resulting pattern is dependent on the world seed and name
-        # false: the resulting pattern is dependent only on the world seed
+                          # false: the resulting pattern is dependent only on the world seed
         chance: 70.0 # The chance that a chunk is an empty chunk from 0 (no chunk gets removed) to 100 (all chunks are getting removed)
-        # In this case 70% of the world is removed
+                     # In this case 70% of the world is removed
   dummy-world-2:
+    fix-exit-portal: true # If set to true, the plugin will attempt to fix the exit portal
+                          # For this it uses the surrounding terrain, if no surrounding terrain is found
+                          # the value from fallback-exit-portal-height is used
+                          # If this is set to false, there is a change that you can not ender the exit portal
+                          #
+                          # This option only works for worlds, which have the exit portal (normally only the end world)
+    fallback-exit-portal-height: 64
     chunk-validator:
       name: "random"
       data:

@@ -27,6 +27,7 @@ package de.derfrzocker.chunkremover.impl.v1_16_R3;
 import com.mojang.serialization.Codec;
 import de.derfrzocker.chunkremover.api.ChunkPosition;
 import de.derfrzocker.chunkremover.api.ChunkRemoverService;
+import de.derfrzocker.chunkremover.api.Dimension;
 import de.derfrzocker.chunkremover.api.WorldData;
 import net.minecraft.server.v1_16_R3.*;
 import org.apache.commons.lang.Validate;
@@ -56,16 +57,20 @@ public class ChunkOverrider extends ChunkGenerator {
     @NotNull
     private final org.bukkit.World world;
     @NotNull
+    private final Dimension dimension;
+    @NotNull
     private final Supplier<ChunkRemoverService> serviceSupplier;
 
-    public ChunkOverrider(@NotNull ChunkGenerator parent, @NotNull org.bukkit.World world, @NotNull Supplier<ChunkRemoverService> serviceSupplier) throws IllegalAccessException {
+    public ChunkOverrider(@NotNull ChunkGenerator parent, @NotNull org.bukkit.World world, @NotNull Dimension dimension, @NotNull Supplier<ChunkRemoverService> serviceSupplier) throws IllegalAccessException {
         super(null, null);
         Validate.notNull(parent, "Parent ChunkGenerator cannot be null");
         Validate.notNull(world, "World cannot be null");
+        Validate.notNull(dimension, "Dimension cannot be null");
         Validate.notNull(serviceSupplier, "Service supplier cannot be null");
 
         this.parent = parent;
         this.world = world;
+        this.dimension = dimension;
         this.serviceSupplier = serviceSupplier;
     }
 
@@ -129,6 +134,33 @@ public class ChunkOverrider extends ChunkGenerator {
                     }
                 }
             });
+        }
+
+        // the end exit portal will always spawn at P(0|y|0) which is chunk P(0|0)
+        if (worldData.shouldFixExitPortal() && dimension == Dimension.THE_END && chunkX == 0 && chunkZ == 0) {
+            /**
+             We check the corner value of P(0|y|0) which are in a new chunk
+             This means we are checking the Positions
+             - A(-1|y|0)
+             - B(0|y|-1)
+             - C(-1|y|-1)
+
+             When one of those returns a value as highest block which is > 1
+             (1 because the highest block returns highestBlock + 1) we use this value and
+             set a block at P(0|y|0). This will result into the exit portal generating at this height
+             and also blends in with the terrain which is nearby
+
+             If A, B and C all return <= 1, we use the value from {@link WorldData#getFallbackExitPortalHeight()} was
+             */
+            int y;
+
+            if ((y = regionLimitedWorldAccess.a(HeightMap.Type.MOTION_BLOCKING, -1, 0)) <= 1 &&
+                    (y = regionLimitedWorldAccess.a(HeightMap.Type.MOTION_BLOCKING, 0, -1)) <= 1 &&
+                    (y = regionLimitedWorldAccess.a(HeightMap.Type.MOTION_BLOCKING, -1, -1)) <= 1) {
+                y = worldData.getFallbackExitPortalHeight();
+            }
+
+            regionLimitedWorldAccess.setTypeAndData(new BlockPosition(0, y, 0), Blocks.END_STONE.getBlockData(),3);
         }
 
     }

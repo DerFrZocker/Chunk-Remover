@@ -25,14 +25,15 @@
 package de.derfrzocker.chunkremover.impl.v1_16_R3;
 
 import de.derfrzocker.chunkremover.api.ChunkRemoverService;
-import net.minecraft.server.v1_16_R3.ChunkGenerator;
-import net.minecraft.server.v1_16_R3.PlayerChunkMap;
+import de.derfrzocker.chunkremover.api.Dimension;
+import net.minecraft.server.v1_16_R3.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -79,7 +80,7 @@ public class WorldHandler_v1_16_R3 implements Listener {
             final ChunkGenerator chunkGenerator = (ChunkGenerator) chunkGeneratorObject;
 
             // create a new ChunkOverrider
-            final ChunkOverrider overrider = new ChunkOverrider(chunkGenerator, bukkitWorld, serviceSupplier);
+            final ChunkOverrider overrider = new ChunkOverrider(chunkGenerator, bukkitWorld,getDimension(world.getHandle()), serviceSupplier);
 
             // set the ChunkOverrider to the PlayerChunkMap
             ChunkGeneratorField.set(playerChunkMap, overrider);
@@ -87,6 +88,22 @@ public class WorldHandler_v1_16_R3 implements Listener {
         } catch (final Exception e) {
             throw new RuntimeException("Unexpected error while hook into world " + world.getName(), e);
         }
+    }
+
+    private Dimension getDimension(WorldServer worldServer){
+        ResourceKey<DimensionManager> dimensionKey = worldServer.getTypeKey();
+
+        if(dimensionKey == DimensionManager.OVERWORLD){
+            return Dimension.OVERWORLD;
+        }
+        if(dimensionKey == DimensionManager.THE_NETHER){
+            return Dimension.NETHER;
+        }
+        if(dimensionKey == DimensionManager.THE_END){
+            return Dimension.THE_END;
+        }
+
+        return Dimension.CUSTOM;
     }
 
 }
