@@ -40,7 +40,7 @@ public interface WorldData {
 
     /**
      * This only works in a dimension which can spawn the ender dragon fight.
-     *
+     * <p>
      * With this option set to true, the plugin should attempt to fix the
      * exit portal in the end. The exit portal spawns at P(0|0|0) if the chunk
      * with the position P(0|0) is empty / removed. This leads to an exit portal
@@ -55,12 +55,20 @@ public interface WorldData {
     /**
      * This value is used if {@link #shouldFixExitPortal()} returns true
      * and no suitable position is found.
-     *
+     * <p>
      * For further details see {@link #shouldFixExitPortal()}
      *
      * @return y-fallback value for the exit portal
      */
     int getFallbackExitPortalHeight();
+
+    /**
+     * Normally the plugin does not affect spawn chunks. With this option set to true
+     * however, the plugin attempts to also affect spawn chunks.
+     *
+     * @return true if the plugin should affect spawn chunk otherwise false
+     */
+    boolean shouldAffectSpawnChunks();
 
     /**
      * @return the name of the chunk validator which should get used

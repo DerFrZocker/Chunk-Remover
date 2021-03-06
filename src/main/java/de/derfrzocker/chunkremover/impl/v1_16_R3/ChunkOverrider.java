@@ -97,7 +97,6 @@ public class ChunkOverrider extends ChunkGenerator {
 
     @Override
     public void addDecorations(RegionLimitedWorldAccess regionLimitedWorldAccess, StructureManager structuremanager) {
-
         ChunkRemoverService service = serviceSupplier.get();
         ChunkPosition chunkPosition = new ChunkPosition(regionLimitedWorldAccess.a(), regionLimitedWorldAccess.b());
 
@@ -160,7 +159,7 @@ public class ChunkOverrider extends ChunkGenerator {
                 y = worldData.getFallbackExitPortalHeight();
             }
 
-            regionLimitedWorldAccess.setTypeAndData(new BlockPosition(0, y, 0), Blocks.END_STONE.getBlockData(),3);
+            regionLimitedWorldAccess.setTypeAndData(new BlockPosition(0, y, 0), Blocks.END_STONE.getBlockData(), 3);
         }
 
     }
@@ -243,20 +242,20 @@ public class ChunkOverrider extends ChunkGenerator {
     }
 
     @Override
-    public void createBiomes(IRegistry<BiomeBase> iregistry, IChunkAccess ichunkaccess) {
-        parent.createBiomes(iregistry, ichunkaccess);
+    public void createBiomes(IRegistry<BiomeBase> iregistry, IChunkAccess iChunkAccess) {
+        parent.createBiomes(iregistry, iChunkAccess);
     }
 
     @Override
     public void createStructures(IRegistryCustom iregistrycustom, StructureManager structuremanager, IChunkAccess
-            ichunkaccess, DefinedStructureManager definedstructuremanager, long i) {
-        parent.createStructures(iregistrycustom, structuremanager, ichunkaccess, definedstructuremanager, i);
+            iChunkAccess, DefinedStructureManager definedstructuremanager, long i) {
+        parent.createStructures(iregistrycustom, structuremanager, iChunkAccess, definedstructuremanager, i);
     }
 
     @Override
     public void storeStructures(GeneratorAccessSeed generatoraccessseed, StructureManager
-            structuremanager, IChunkAccess ichunkaccess) {
-        parent.storeStructures(generatoraccessseed, structuremanager, ichunkaccess);
+            structuremanager, IChunkAccess iChunkAccess) {
+        parent.storeStructures(generatoraccessseed, structuremanager, iChunkAccess);
     }
 
 }

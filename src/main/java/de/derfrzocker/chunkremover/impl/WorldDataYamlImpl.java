@@ -34,6 +34,7 @@ public class WorldDataYamlImpl implements WorldData {
     private final boolean generatePortalRoom;
     private final boolean fixExitPortal;
     private final int fallbackExitPortalHeight;
+    private final boolean affectSpawnChunks;
     private final String chunkValidatorName;
     private final ValidatorDataYamlImpl validatorData;
 
@@ -41,6 +42,7 @@ public class WorldDataYamlImpl implements WorldData {
         generatePortalRoom = section.getBoolean("generate-portal-room", false);
         fixExitPortal = section.getBoolean("fix-exit-portal", true);
         fallbackExitPortalHeight = section.getInt("fallback-exit-portal-height", 64);
+        affectSpawnChunks = section.getBoolean("affect-spawn-chunks", true);
         chunkValidatorName = section.getString("chunk-validator.name", "always-true");
         validatorData = new ValidatorDataYamlImpl(section.getConfigurationSection("chunk-validator.data"));
     }
@@ -58,6 +60,11 @@ public class WorldDataYamlImpl implements WorldData {
     @Override
     public int getFallbackExitPortalHeight() {
         return fallbackExitPortalHeight;
+    }
+
+    @Override
+    public boolean shouldAffectSpawnChunks() {
+        return affectSpawnChunks;
     }
 
     @NotNull

@@ -22,48 +22,36 @@
  * SOFTWARE.
  */
 
-package de.derfrzocker.chunkremover.api;
+package de.derfrzocker.chunkremover.impl.v1_16_R3;
 
-public class ChunkPosition {
+import net.minecraft.server.v1_16_R3.ChunkStatus;
+import net.minecraft.server.v1_16_R3.IChunkAccess;
+import net.minecraft.server.v1_16_R3.RegionLimitedWorldAccess;
+import net.minecraft.server.v1_16_R3.WorldServer;
 
-    private final int x;
-    private final int z;
+import javax.annotation.Nullable;
+import java.util.List;
 
-    public ChunkPosition(int x, int z) {
-        this.x = x;
-        this.z = z;
+public class SpawnChunkWorldAccess extends RegionLimitedWorldAccess {
+
+    private final WorldServer worldServer;
+
+    public SpawnChunkWorldAccess(WorldServer worldserver, List<IChunkAccess> list) {
+        super(worldserver, list);
+
+        this.worldServer = worldserver;
     }
 
-    /**
-     * @return the x coordinate of a chunk
-     */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * @return the z coordinate of a chunk
-     */
-    public int getZ() {
-        return z;
-    }
-
+    @Nullable
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public IChunkAccess getChunkAt(int x, int z, ChunkStatus chunkstatus, boolean flag) {
+        IChunkAccess iChunkAccess = super.getChunkAt(x, z, chunkstatus, false);
 
-        ChunkPosition that = (ChunkPosition) o;
+        if (iChunkAccess != null || !flag) {
+            return iChunkAccess;
+        }
 
-        if (getX() != that.getX()) return false;
-        return getZ() == that.getZ();
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getX();
-        result = 31 * result + getZ();
-        return result;
+        return worldServer.getChunkAt(x, z, ChunkStatus.STRUCTURE_STARTS, flag);
     }
 
 }

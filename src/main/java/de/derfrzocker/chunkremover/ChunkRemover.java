@@ -74,7 +74,7 @@ public class ChunkRemover extends JavaPlugin {
         reload(service);
         registerValidators(service);
 
-        getServer().getPluginManager().registerEvents(new WorldHandler_v1_16_R3(serviceSupplier), this);
+        getServer().getPluginManager().registerEvents(new WorldHandler_v1_16_R3(this, serviceSupplier), this);
 
         new Metrics(this, 9882);
     }
