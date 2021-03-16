@@ -34,14 +34,16 @@ public class WorldDataYamlImpl implements WorldData {
     private final boolean generatePortalRoom;
     private final boolean fixExitPortal;
     private final int fallbackExitPortalHeight;
+    private final boolean generateEndSpike;
     private final boolean affectSpawnChunks;
     private final String chunkValidatorName;
     private final ValidatorDataYamlImpl validatorData;
 
     public WorldDataYamlImpl(@NotNull ConfigurationSection section) {
-        generatePortalRoom = section.getBoolean("generate-portal-room", false);
+        generatePortalRoom = section.getBoolean("generate-portal-room", true);
         fixExitPortal = section.getBoolean("fix-exit-portal", true);
         fallbackExitPortalHeight = section.getInt("fallback-exit-portal-height", 64);
+        generateEndSpike = section.getBoolean("generate-end-spike", true);
         affectSpawnChunks = section.getBoolean("affect-spawn-chunks", true);
         chunkValidatorName = section.getString("chunk-validator.name", "always-true");
         validatorData = new ValidatorDataYamlImpl(section.getConfigurationSection("chunk-validator.data"));
@@ -60,6 +62,11 @@ public class WorldDataYamlImpl implements WorldData {
     @Override
     public int getFallbackExitPortalHeight() {
         return fallbackExitPortalHeight;
+    }
+
+    @Override
+    public boolean shouldGenerateEndSpike() {
+        return generateEndSpike;
     }
 
     @Override

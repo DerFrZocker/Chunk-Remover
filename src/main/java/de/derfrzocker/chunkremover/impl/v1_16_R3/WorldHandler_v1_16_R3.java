@@ -41,10 +41,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -202,6 +199,8 @@ public class WorldHandler_v1_16_R3 implements Listener {
                     }
 
                     List<IChunkAccess> bufferList = Arrays.asList(buffer);
+                    ((ProtoChunk) newChunkAccesses[i]).a(worldServer.getChunkProvider().getLightEngine());
+                    HeightMap.a(newChunkAccesses[i], EnumSet.of(HeightMap.Type.MOTION_BLOCKING, HeightMap.Type.MOTION_BLOCKING_NO_LEAVES, HeightMap.Type.OCEAN_FLOOR, HeightMap.Type.WORLD_SURFACE));
                     RegionLimitedWorldAccess worldAccess = new RegionLimitedWorldAccess(worldServer, bufferList);
 
                     chunkOverrider.addDecorations(worldAccess, new StructureManager(worldAccess, worldServer.worldDataServer.getGeneratorSettings()));

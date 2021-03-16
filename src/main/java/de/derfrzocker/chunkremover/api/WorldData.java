@@ -63,6 +63,14 @@ public interface WorldData {
     int getFallbackExitPortalHeight();
 
     /**
+     * When this method returns true the end spikes in the end gets generated,
+     * even if the chunk is a removed chunk
+     *
+     * @return true if the end spike should get generated otherwise false
+     */
+    boolean shouldGenerateEndSpike();
+
+    /**
      * Normally the plugin does not affect spawn chunks. With this option set to true
      * however, the plugin attempts to also affect spawn chunks.
      *

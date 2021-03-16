@@ -31,11 +31,14 @@ import de.derfrzocker.chunkremover.api.Dimension;
 import de.derfrzocker.chunkremover.api.WorldData;
 import net.minecraft.server.v1_16_R3.*;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -119,7 +122,7 @@ public class ChunkOverrider extends ChunkGenerator {
         final int z = chunkZ << 4;
 
         if (worldData.shouldGeneratePortalRoom()) {
-            // generation Stronghold room
+            // generating Stronghold room
 
             SeededRandom random = new SeededRandom();
             structuremanager.a(SectionPosition.a(new ChunkCoordIntPair(regionLimitedWorldAccess.a(), regionLimitedWorldAccess.b()), 0), StructureGenerator.STRONGHOLD).forEach((structureStart) -> {
@@ -162,6 +165,50 @@ public class ChunkOverrider extends ChunkGenerator {
             regionLimitedWorldAccess.setTypeAndData(new BlockPosition(0, y, 0), Blocks.END_STONE.getBlockData(), 3);
         }
 
+        if (worldData.shouldGenerateEndSpike()) {
+            BlockPosition blockposition = new BlockPosition(x, 0, z);
+            BiomeBase biomebase = regionLimitedWorldAccess.getBiome((chunkX << 2) + 2, 2, (chunkZ << 2) + 2);
+            SeededRandom seededrandom = new SeededRandom();
+            long chunkSeeded = seededrandom.a(regionLimitedWorldAccess.getSeed(), x, z);
+
+
+            List<List<Supplier<WorldGenFeatureConfigured<?, ?>>>> features = biomebase.e().c();
+            int decorationLength = WorldGenStage.Decoration.values().length;
+
+            for (int i = 0; i < decorationLength; ++i) {
+                int counter = 0;
+
+                if (features.size() > i) {
+                    for (Iterator<Supplier<WorldGenFeatureConfigured<?, ?>>> iterator = features.get(i).iterator(); iterator.hasNext(); ++counter) {
+                        Supplier<WorldGenFeatureConfigured<?, ?>> supplier = iterator.next();
+                        WorldGenFeatureConfigured<?, ?> configuration = supplier.get();
+
+                        IRegistryWritable<WorldGenFeatureConfigured<?, ?>> registry = getRegistry().b(IRegistry.au);
+                        WorldGenFeatureConfigured<?, ?> configured = RegistryGeneration.e.get(registry.getKey(configuration));
+
+                        if (configured == BiomeDecoratorGroups.END_SPIKE) {
+                            seededrandom.b(chunkSeeded, counter, i);
+                            try {
+                                configuration.a(regionLimitedWorldAccess, this, seededrandom, blockposition);
+                            } catch (Exception e) {
+                                CrashReport crashReport = CrashReport.a(e, "Feature placement");
+                                crashReport.a("Feature").a("Id", IRegistry.FEATURE.getKey(configuration.e)).a("Config", configuration.f).a("Description", configuration.e::toString);
+                                throw new ReportedException(crashReport);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    @NotNull
+    private IRegistryCustom getRegistry() {
+        DedicatedServer server = ((CraftServer) Bukkit.getServer()).getServer();
+
+        return server.getCustomRegistry();
     }
 
     @Override
