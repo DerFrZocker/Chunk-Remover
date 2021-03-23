@@ -17,22 +17,20 @@
 #  |                                       NOTE:                                       |  #
 #  |                               PLEASE KEEP IN MIND,                                |  #
 #  |                THAT THE PLUGIN ONLY AFFECTS NEWLY GENERATED CHUNKS                |  #
-#  |               AND THAT SPAWN CHUNKS ARE NOT AFFECTED BY THIS PLUGIN               |  #
 #  |                                                                                   |  #
 #  -------------------------------------------------------------------------------------  #
 ###########################################################################################.
 
 # You can add new worlds by simple following the schema below
 world-datas:
-  dummy-world:
+  dummy-world: # 'dummy-world' is the name of the world this settings should apply, for example 'world' for the normal overworld
     generate-portal-room: false # when this is set to true the portal room which leads to the end
       # will get generated even, if the portal room is in an empty chunk
       # in which case the portal room will fly mid air
-    #
-    # This option only works for worlds, which have normally a portal room (normally only the overworld)
+      # This option only works for worlds, which have normally a portal room (normally only the overworld)
     affect-spawn-chunks: true # normally the plugin does not affect spawn chunks, however with this method set to true,
       # the plugin will attempt to also affect those chunks. The methode which is used to achieve
-    # this is not 100% save and can lead to server errors on startup
+      # this is not 100% save and can lead to server errors on startup
     chunk-validator:
       name: "random"
       data:
@@ -44,12 +42,11 @@ world-datas:
     fix-exit-portal: true # If set to true, the plugin will attempt to fix the exit portal
       # For this it uses the surrounding terrain, if no surrounding terrain is found
       # the value from fallback-exit-portal-height is used
-      # If this is set to false, there is a change that you can not ender the exit portal
-    #
-    # This option only works for worlds, which have the exit portal (normally only the end world)
+      # If this is set to false, there is a change that you can not enter the exit portal
+      # This option only works for worlds, which have the exit portal (normally only the end world)
     fallback-exit-portal-height: 64
     generate-end-spike: true # With this set to true the plugin will generated the end spikes (Obsidian pillars in the end with
-    # the end cristal on top), regardless if the chunk is removed or not.
+      # the end cristal on top), regardless if the chunk is removed or not.
     affect-spawn-chunks: true
     chunk-validator:
       name: "random"
