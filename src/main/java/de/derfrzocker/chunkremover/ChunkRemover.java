@@ -28,6 +28,7 @@ import de.derfrzocker.chunkremover.api.ChunkRemoverService;
 import de.derfrzocker.chunkremover.impl.ChunkRemoverServiceImpl;
 import de.derfrzocker.chunkremover.impl.WorldDataYamlImpl;
 import de.derfrzocker.chunkremover.impl.v1_16_R3.WorldHandler_v1_16_R3;
+import de.derfrzocker.chunkremover.impl.validators.CheckerboardValidator;
 import de.derfrzocker.chunkremover.impl.validators.RandomValidator;
 import de.derfrzocker.spigot.utils.Config;
 import de.derfrzocker.spigot.utils.Version;
@@ -81,6 +82,7 @@ public class ChunkRemover extends JavaPlugin {
 
     private void registerValidators(ChunkRemoverService chunkRemoverService) {
         chunkRemoverService.registerChunkValidator("random", new RandomValidator());
+        chunkRemoverService.registerChunkValidator("checkerboard", new CheckerboardValidator());
         chunkRemoverService.registerChunkValidator("always-true", (worldInfo, chunkPosition) -> true);
     }
 

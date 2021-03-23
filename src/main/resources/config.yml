@@ -49,7 +49,9 @@ world-datas:
       # the end cristal on top), regardless if the chunk is removed or not.
     affect-spawn-chunks: true
     chunk-validator:
-      name: "random"
+      name: "checkerboard" # generateds a checkerboard stile world
       data:
-        name-seeded: false
-        chance: 10.5
+        inverted: false # removed becomes generated and generated removed
+        tile-length: # the tile length in chunks
+          x: 2
+          z: 2
