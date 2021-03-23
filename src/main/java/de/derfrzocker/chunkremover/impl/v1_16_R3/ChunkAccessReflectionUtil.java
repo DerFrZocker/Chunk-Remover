@@ -56,6 +56,8 @@ public class ChunkAccessReflectionUtil {
 
             field.setAccessible(true);
             try {
+                // System.out.println("replacing field:'" + field.getName() + "' with the type: '" + field.getType() + "', from '" + field.get(target) + "' to: '" + field.get(source) + "'");
+
                 field.set(target, field.get(source));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
@@ -74,12 +76,23 @@ public class ChunkAccessReflectionUtil {
     public static void copy(Chunk target, Chunk source) {
         for (Field field : Chunk.class.getDeclaredFields()) {
             String name = field.getName();
-            if (name.equals("LOGGER") || name.equals("heightMap") || name.equals("DATA_TYPE_REGISTRY") || name.equals("loc") || name.equals("a")) {
+            if (name.equals("LOGGER") ||
+                    name.equals("heightMap") ||
+                    name.equals("DATA_TYPE_REGISTRY") ||
+                    name.equals("loc") ||
+                    name.equals("a") ||
+                    name.equals("loaded") ||
+                    name.equals("u") ||
+                    name.equals("x") ||
+                    name.equals("bukkitChunk") ||
+                    name.equals("persistentDataContainer")) {
                 continue;
             }
 
             field.setAccessible(true);
             try {
+                // System.out.println("replacing field:'" + field.getName() + "' with the type: '" + field.getType() + "', from '" + field.get(target) + "' to: '" + field.get(source) + "'");
+
                 field.set(target, field.get(source));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

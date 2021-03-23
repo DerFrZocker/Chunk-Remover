@@ -229,7 +229,7 @@ public class WorldHandler_v1_16_R3 implements Listener {
         ChunkAccessReflectionUtil.copy(oldChunk, fullChunk);
 
         // removing old height maps
-        ChunkAccessReflectionUtil.removeHeightMaps(oldChunk);
+        //ChunkAccessReflectionUtil.removeHeightMaps(oldChunk);
 
         // coping height maps
         fullChunk.f().forEach((entry) -> oldChunk.a(entry.getKey()).a(entry.getValue().a()));
@@ -251,7 +251,7 @@ public class WorldHandler_v1_16_R3 implements Listener {
                             ChunkAccessReflectionUtil.copy(oldIChunkAccess, newChunkAccess);
 
                             // removing old height maps
-                            ChunkAccessReflectionUtil.removeHeightMaps(protoChunk);
+                            //ChunkAccessReflectionUtil.removeHeightMaps(protoChunk);
 
                             // coping height maps
                             newChunkAccess.f().forEach((entry) -> oldIChunkAccess.a(entry.getKey(), entry.getValue().a()));
